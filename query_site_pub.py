@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import argparse
+import re
 import time
 from datetime import datetime
 
@@ -25,7 +26,21 @@ from twilio.rest import Client
 
 def comma_separated_list(value):
     """Converts a comma-separated string into a sorted list of numbers"""
-    return sorted([item.strip() for item in value.split(',')], key = int)
+    return sorted([item.strip() for item in value.split(',')], key = sort_key)
+
+def sort_key(s):
+    """
+    Natural sorting function used by sorted that
+    sorts a list of alphanumeric values (excluding special characters)
+
+    :param s : alphanumeric value (examples: 2, S15, 18B) 
+    :return  : a tuple (example: ("", 2, "") or ("S", 15, "") or ("", 18, "B")
+    """
+    match = re.match(r'([A-Za-z]*)(\d+)([A-Za-z]*)', s.strip())
+    if match:
+        prefix, number, suffix = match.groups()
+        return (prefix, int(number), suffix)
+    return (s, 0, '')  # fallback if unmatched
 
 def send_sms(message, client, to_number, from_number):
     """
@@ -91,8 +106,8 @@ def get_sites_availability(driver, url):
                         time.sleep(retry_delay)
                         retry_delay *= 2  # Exponential backoff
                         break  # Break out and retry fetching elements
-
-                return sorted(available_sites, key = int)
+                
+                return sorted(available_sites, key = sort_key)
 
             except StaleElementReferenceException:
                 print(f"🔄 Retrying fetch attempt {attempt + 1}/{max_retries} due to stale elements...")
@@ -140,7 +155,7 @@ if __name__ == '__main__':
                    "Example URL: \n"
                    "https://camping.bcparks.ca/create-booking/results?mapId=-2147483376&searchTabGroupId=0&bookingCategoryId=0&startDate=2025-07-07&endDate=2025-07-14&nights=7&isReserving=true&equipmentId=-32768&subEquipmentId=-32768&filterData=%7B%7D"
                    "---< Setup >--- \n"
-                   "1. Ensure you are running python3.11 \n"
+                   "1. Ensure you are running python3.11 (older version may work) \n"
                    "2. Create virtual env: \n"
                    "    python3 -m venv bcparks \n"
                    "3. Activate this env: \n"
@@ -156,6 +171,7 @@ if __name__ == '__main__':
                    "    CHROME_VERSION=$(google-chrome --version | awk '{print $3}')\n"
                    "    wget https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chromedriver-linux64.zip\n"
                    "    unzip chromedriver-linux64.zip\n"
+                   "    cd chromedriver-linux64\n"
                    "    mv chromedriver /usr/local/bin/\n"
                    "    chmod +x /usr/local/bin/chromedriver\n\n"
                    "5. Twilio (Optional)\n"
@@ -164,7 +180,7 @@ if __name__ == '__main__':
                    "Check for site availability : \n"
                    "  ./query_site.py --u 'https://camping.bcparks.ca/create-booking...'  \n\n" 
                    "Check for site availability for specific sites : \n"
-                   "  ./query_site.py --u 'https://camping.bcparks.ca/create-booking...' --f '10,92'  \n\n" 
+                   "  ./query_site.py --u 'https://camping.bcparks.ca/create-booking...' --f '10,92,S18,S32B'  \n\n" 
                    "Check for site availability and get and sms notification (check twilio_* arguments): \n"
                    "  ./query_site.py --u 'https://camping.bcparks.ca/create-booking...' --s \n\n"
                    "Check for site availability every 30s insead the default 60s: \n"
@@ -177,7 +193,7 @@ if __name__ == '__main__':
                                      formatter_class = argparse.RawTextHelpFormatter
     )
     parser.add_argument('--url',
-                         help     = 'Example URL https://camping.bcparks.ca/create-booking/results?mapId=-2147483376&searchTabGroupId=0&bookingCategoryId=0&startDate=2025-07-07&endDate=2025-07-14&nights=7&isReserving=true&equipmentId=-32768&subEquipmentId=-32768&filterData=%7B%7D',
+                         help     = 'https://camping.bcparks.ca/create-booking...',
                          required = True 
     )
     parser.add_argument('--interval', '--i',
