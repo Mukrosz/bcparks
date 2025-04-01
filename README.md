@@ -60,7 +60,7 @@ chmod +x /usr/local/bin/chromedriver
 # Usage
 1. Navigate to [https://camping.bcparks.ca/create-booking/](url)
 2. Select your Park, time frame and tent size, click Search
-3. A map of available campsites (Note: if there are multiple camp sites within the park, select the desired camp site)
+3. A map of available campsites should now be visible (Note: if there are multiple camp sites within the park, select the desired camp site)
 4. Copy the URL (this is your `--u` argument)
 > URL `--u` example:
 ```
