@@ -4,25 +4,9 @@ import re
 import time
 from datetime import datetime
 
-# Selenium
-from selenium import webdriver
-from selenium.common.exceptions import (
-    StaleElementReferenceException,
-    TimeoutException,
-    NoSuchElementException,
-    WebDriverException
-)
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
-# WebDriver Manager
-from webdriver_manager.chrome import ChromeDriverManager
-
-# Twilio API
-from twilio.rest import Client
+def shorten_url(url):
+    s = pyshorteners.Shortener()
+    return s.tinyurl.short(url)
 
 def comma_separated_list(value):
     """Converts a comma-separated string into a sorted list of numbers"""
@@ -149,6 +133,29 @@ def setup_webdriver():
         return None
 
 if __name__ == '__main__':
+    # Selenium
+    from selenium import webdriver
+    from selenium.common.exceptions import (
+        StaleElementReferenceException,
+        TimeoutException,
+        NoSuchElementException,
+        WebDriverException
+    )
+    from selenium.webdriver.chrome.service import Service as ChromeService
+    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+
+    # WebDriver Manager
+    from webdriver_manager.chrome import ChromeDriverManager
+
+    # PyShorter - TinyURL
+    import pyshorteners
+
+    # Twilio API
+    from twilio.rest import Client
+
     description = ("This scripts monitors for available sites based on the provided URL from the camping.bcparks.ca website \n"
                    "The script runs on a headless linux server\n"
                    "Tested on Debian 12.5(Bookworm) with latest Chrome \n"
@@ -255,8 +262,9 @@ if __name__ == '__main__':
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             if available_sites:
                 print(f"{timestamp} - Available sites: {', '.join(available_sites)}")
+                url = shorten_url(args.url)
                 if args.sms:
-                    send_sms(f"{timestamp} - Available sites: {', '.join(available_sites)}\n{args.url}",
+                    send_sms(f"{timestamp} - Available sites: {', '.join(available_sites)}\n{url}",
                              client, args.my_phone_number, args.twilio_number)
             else:
                 print(f"{timestamp} - No Availability")
