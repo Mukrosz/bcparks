@@ -1,6 +1,12 @@
 # Description
 This script serves as a simple notification system for sites availability found on BC Parks Camping website.
-Runs on a headless linux server.
+Runs on a headless linux server.<br/><br/>
+Example output:
+```
+2024-03-01 08:18:33 - No Availability
+2024-03-01 08:19:23 - Available sites: 51, 58
+SMS sent: SMaxxxxx
+```
 
 # Requirements
 * linux OS (tested on Debian 12.5) 
