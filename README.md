@@ -101,3 +101,23 @@ https://camping.bcparks.ca/create-booking/results?resourceLocationId=-2147483504
                     --twilio_sid X --twilio_auth_token X --twilio_number X \
                     --my_phone_number X
 ```
+
+> Arguments
+```
+options:
+  -h, --help            show this help message and exit
+  --url URL             https://camping.bcparks.ca/create-booking...
+  --interval INTERVAL, --i INTERVAL
+                        Interval between checks in seconds
+  --filter FILTER, --f FILTER
+                        Filter specified sites
+  --sms, --s            Enable SMS notification
+  --twilio_sid TWILIO_SID, --tsid TWILIO_SID
+                        Twilio account sid
+  --twilio_auth_token TWILIO_AUTH_TOKEN, --tat TWILIO_AUTH_TOKEN
+                        Twilio auth token
+  --twilio_number TWILIO_NUMBER, --tn TWILIO_NUMBER
+                        Twilio phone number
+  --my_phone_number MY_PHONE_NUMBER, --mpn MY_PHONE_NUMBER
+                        My phone number
+```
