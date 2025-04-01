@@ -80,6 +80,7 @@ https://camping.bcparks.ca/create-booking/results?resourceLocationId=-2147483504
 ```
 . bcpark/bin/activate
 ```
+<br/>
 
 > Monitor availability of all spots in the campsite (green colored) every 60 seconds
 ```
