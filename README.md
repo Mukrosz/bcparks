@@ -1,6 +1,6 @@
 # Description
-This script serves as a simple notification system for sites availability on BC Parks Camping website.
-Tuns on a headless linux server.
+This script serves as a simple notification system for sites availability found on BC Parks Camping website.
+Runs on a headless linux server.
 
 # Requirements
 * linux OS (tested on Debian 12.5) 
