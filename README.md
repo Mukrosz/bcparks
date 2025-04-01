@@ -8,6 +8,9 @@ Example output:
 SMS sent: SMaxxxxx
 ```
 
+# Disclaimer
+This is a work in progress-hobby project. Errors, bugs are expected. 
+
 # Requirements
 * linux OS (tested on Debian 12.5) 
 * python3.11 (older may work, not tested)
