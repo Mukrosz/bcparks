@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 
 def shorten_url(url):
+    """Convert long URLs to short """
     s = pyshorteners.Shortener()
     return s.tinyurl.short(url)
 
@@ -262,9 +263,8 @@ if __name__ == '__main__':
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             if available_sites:
                 print(f"{timestamp} - Available sites: {', '.join(available_sites)}")
-                url = shorten_url(args.url)
                 if args.sms:
-                    send_sms(f"{timestamp} - Available sites: {', '.join(available_sites)}\n{url}",
+                    send_sms(f"{timestamp} - Available sites: {', '.join(available_sites)}\n{shorten_url(args.url)}",
                              client, args.my_phone_number, args.twilio_number)
             else:
                 print(f"{timestamp} - No Availability")
