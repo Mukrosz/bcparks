@@ -25,7 +25,7 @@ SMS sent: SMaxxxxx
 python3 -m venv bcparks
 ```
 
-> Active this virtual environment
+> Activate this virtual environment
 ```
 . bcpark/bin/activate
 ```
@@ -76,7 +76,7 @@ https://camping.bcparks.ca/create-booking/results?resourceLocationId=-2147483504
 &searchTime=2025-04-01T10:25:15.774&flexibleSearch=%5Bfalse,false,%222025-04-01%22,1%5D&filterData=%7B%7D
 ```
 <br/><br/>
-> Active this virtual environment
+> Activate bcpark virtual environment
 ```
 . bcpark/bin/activate
 ```
