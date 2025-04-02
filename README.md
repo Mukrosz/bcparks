@@ -17,6 +17,7 @@ This is a work in progress-hobby project. Errors, bugs are expected.
 * pip packages:
   * selenium
   * webdriver-manager
+  * pyshorteners
   * twilio (optional sms service)
 * Chrome
 * ChromeDriver (Chrome matching version)
@@ -35,7 +36,7 @@ python3 -m venv bcparks
 
 > Install python dependencies
 ```
-pip install selenium webdriver-manager
+pip install selenium webdriver-manager pyshorteners
 ```
 
 > Install Twilio module if you plan to receive SMS notifications (requires Twilio registration)
