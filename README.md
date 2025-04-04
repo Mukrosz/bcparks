@@ -22,7 +22,7 @@ This is a work in progress-hobby project. Errors, bugs are expected.
 * Chrome
 * ChromeDriver (Chrome matching version)
 
-# Install
+# Installation
 ## Python
 > Create virtual envrionment
 ```
