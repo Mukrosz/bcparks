@@ -1,6 +1,8 @@
 # Description
 This script serves as a simple notification system for sites availability found on BC Parks Camping website.
-Runs on a headless linux server.<br/><br/>
+Runs on a headless linux server.<br/>
+**Note**: Unlike the v1 version, v2 uses API calls as opposed to Chrome simulation. This makes the script much faster and more robust
+<br/><br/>
 Example output:
 ```
 2024-03-01 08:18:33 - No Availability
@@ -15,12 +17,8 @@ This is a work in progress-hobby project. Errors, bugs are expected.
 * linux OS (tested on Debian 12.5) 
 * python3.11 (older may work, not tested)
 * pip packages:
-  * selenium
-  * webdriver-manager
   * pyshorteners
   * twilio (optional sms service)
-* Chrome
-* ChromeDriver (Chrome matching version)
 
 # Installation
 ## Python
@@ -36,7 +34,7 @@ python3 -m venv bcparks
 
 > Install python dependencies
 ```
-pip install selenium webdriver-manager pyshorteners
+pip install pyshorteners
 ```
 
 > Install Twilio module if you plan to receive SMS notifications (requires Twilio registration)
@@ -44,30 +42,6 @@ pip install selenium webdriver-manager pyshorteners
 pip install twilio
 ```
 
-## Google Chrome
-> Add Google Chrome repo (Debian based)
-```
-wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo tee /usr/share/keyrings/google-chrome.asc
-echo 'deb [signed-by=/usr/share/keyrings/google-chrome.asc] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
-```
-> Install Google Chrome
-> 
-```
-sudo apt update
-sudo apt install google-chrome-stable
-```
-
-## Google Chrome Driver
-> This should install a matching version of Google Chrome Driver (important)
-```
-CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
-cd /tmp/
-wget https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chromedriver-linux64.zip
-unzip chromedriver-linux64.zip
-cd chromedriver-linux64/
-mv chromedriver /usr/local/bin/
-chmod +x /usr/local/bin/chromedriver
-```
 # Usage
 1. Navigate to [https://camping.bcparks.ca/create-booking/](url)
 2. Select your Park, time frame and tent size, click Search
@@ -88,28 +62,28 @@ https://camping.bcparks.ca/create-booking/results?resourceLocationId=-2147483504
 
 > Monitor availability of all spots in the campsite (green colored) every 60 seconds
 ```
-./query_site_pub.py --u 'https://camping.bcparks.ca/create-booking...'
+./query_site_pub_v2.py --u 'https://camping.bcparks.ca/create-booking...'
 ```
 <br/>
 
 > Monitor availability of specific spots in the campsite
 ```
-./query_site_pub.py --u 'https://camping.bcparks.ca/create-booking...' --f '13,5,41,19`
+./query_site_pub_v2.py --u 'https://camping.bcparks.ca/create-booking...' --f '13,5,41,19`
 ```
 <br/>
 
 > Monitor availability of specific spots in the campsite every 20 seconds (default is 60 seconds)
 ```
-./query_site_pub.py --u 'https://camping.bcparks.ca/create-booking...' --f '13,5,41,19` --i 20
+./query_site_pub_v2.py --u 'https://camping.bcparks.ca/create-booking...' --f '13,5,41,19` --i 20
 ```
 <br/>
 
 > Get notified by SMS when availability is detected:
 > <br/>Note: this requires an active Twilio account
 ```
-./query_site_pub.py --u 'https://camping.bcparks.ca/create-booking...' --s --i 30 --f '40,21' \
-                    --twilio_sid X --twilio_auth_token X --twilio_number X \
-                    --my_phone_number X
+./query_site_pub_v2.py --u 'https://camping.bcparks.ca/create-booking...' --s --i 30 --f '40,21' \
+                       --twilio_sid X --twilio_auth_token X --twilio_number X \
+                       --my_phone_number X
 ```
 
 > Arguments
