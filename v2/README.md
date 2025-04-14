@@ -1,6 +1,8 @@
 # Description
 This script serves as a simple notification system for sites availability found on BC Parks Camping website.
 Runs on a headless linux server.<br/>
+When the script is ran, it continually checks for all or select sites for availability and notifies you on screen or via SMS message<br/><br/>
+Example output:
 **Note**: Unlike the v1 version, v2 uses API calls as opposed to Chrome simulation. This makes the script much faster and more robust
 <br/><br/>
 Example output:
