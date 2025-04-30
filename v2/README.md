@@ -31,7 +31,7 @@ python3 -m venv bcparks
 
 > Activate this virtual environment
 ```
-. bcpark/bin/activate
+. bcparks/bin/activate
 ```
 
 > Install python dependencies
