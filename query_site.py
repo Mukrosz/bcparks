@@ -168,7 +168,7 @@ if __name__ == '__main__':
                    "  ./query_site.py --u 'https://camping.bcparks.ca/create-booking...' --s \n\n"
                    "Check for site availability every 30s insead the default 60s: \n"
                    "  ./query_site.py --u 'https://camping.bcparks.ca/create-booking...' --s --i 30 \n\n"
-                   "Override sms Twilio args: \n"
+                   "Get an SMS notification when a site becomes available (requires Twilio account): \n"
                    "  ./query_site.py --u 'https://camping.bcparks.ca/create-booking...' --s --i 30 \\\n"
                    "                  --twilio_sid X --twilio_auth_token X --twilio_number X \\\n"
                    "                  --my_phone_number X \n\n")
