@@ -93,26 +93,26 @@ https://camping.bcparks.ca/create-booking/results?resourceLocationId=-2147483504
 
 > Monitor availability of all spots in the campsite (green colored) every 60 seconds
 ```
-./query_site_pub.py --u 'https://camping.bcparks.ca/create-booking...'
+./query_site.py --u 'https://camping.bcparks.ca/create-booking...'
 ```
 <br/>
 
 > Monitor availability of specific spots in the campsite
 ```
-./query_site_pub.py --u 'https://camping.bcparks.ca/create-booking...' --f '13,5,41,19`
+./query_site.py --u 'https://camping.bcparks.ca/create-booking...' --f '13,5,41,19`
 ```
 <br/>
 
 > Monitor availability of specific spots in the campsite every 20 seconds (default is 60 seconds)
 ```
-./query_site_pub.py --u 'https://camping.bcparks.ca/create-booking...' --f '13,5,41,19` --i 20
+./query_site.py --u 'https://camping.bcparks.ca/create-booking...' --f '13,5,41,19` --i 20
 ```
 <br/>
 
 > Get notified by SMS when availability is detected:
 > <br/>Note: this requires an active Twilio account
 ```
-./query_site_pub.py --u 'https://camping.bcparks.ca/create-booking...' --s --i 30 --f '40,21' \
+./query_site.py --u 'https://camping.bcparks.ca/create-booking...' --s --i 30 --f '40,21' \
                     --twilio_sid X --twilio_auth_token X --twilio_number X \
                     --my_phone_number X
 ```
