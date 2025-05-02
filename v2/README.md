@@ -1,10 +1,15 @@
 # Description
-This script serves as a simple notification system for sites availability found on BC Parks Camping website.
-Runs on a headless linux server.<br/>
-When the script is ran, it continually checks for all or select sites for availability and notifies you on screen or via SMS message<br/><br/>
-Example output:
+This script serves as a simple notification system for sites availability.
+Works with campsite park reservation systems in:<br/>
+- Canada: British Columbia, Manitoba, Ontario, Nova Scotia, New Brunswick, Newfoundland and Labrador, Yukon, Parks Canada<br/>
+- USA: Michigan, Maryland, Mississippi, Nebraska<br/><br/>
+
 **Note**: Unlike the v1 version, v2 uses API calls as opposed to Chrome simulation. This makes the script much faster and more robust
 <br/><br/>
+
+
+Runs on a headless linux server.<br/>
+When the script is ran, it continually checks for all or select sites for availability and notifies you on screen or via SMS message<br/><br/>
 Example output:
 ```
 2024-03-01 08:18:33 - No Availability
@@ -26,12 +31,12 @@ This is a work in progress-hobby project. Errors, bugs are expected.
 ## Python
 > Create virtual envrionment
 ```
-python3 -m venv bcparks
+python3 -m venv parks
 ```
 
 > Activate this virtual environment
 ```
-. bcparks/bin/activate
+. parks/bin/activate
 ```
 
 > Install python dependencies
@@ -56,9 +61,9 @@ https://camping.bcparks.ca/create-booking/results?resourceLocationId=-2147483504
 &searchTime=2025-04-01T10:25:15.774&flexibleSearch=%5Bfalse,false,%222025-04-01%22,1%5D&filterData=%7B%7D
 ```
 <br/><br/>
-> Activate bcpark virtual environment
+> Activate this virtual environment
 ```
-. bcpark/bin/activate
+. parks/bin/activate
 ```
 <br/>
 
