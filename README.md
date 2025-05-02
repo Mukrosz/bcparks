@@ -24,7 +24,7 @@ This is a work in progress-hobby project. Errors, bugs are expected.
 * pip packages
   * pyshorteners
   * twilio (optional sms service)
-### monitor_site.py - requirements
+### monitor_site.py - additional requirements
 * Chrome
 * ChromeDriver (Chrome matching version)
 * pip packages:
