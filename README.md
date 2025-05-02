@@ -2,7 +2,7 @@
 This script serves as a simple notification system for sites availability.
 Works with campsite park reservation systems in:<br/>
 - Canada: British Columbia, Manitoba, Ontario, Nova Scotia, New Brunswick, Newfoundland and Labrador, Yukon, Parks Canada<br/>
-- USA: Michigan, Maryland, Mississippi, Nebraska<br
+- USA: Michigan, Maryland, Mississippi, Nebraska<br/>
 
 Runs on a headless linux server.<br/>
 When the script is ran, it continually checks for all or select sites for availability and notifies you on screen or via SMS message<br/><br/>
