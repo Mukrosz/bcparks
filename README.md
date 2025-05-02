@@ -1,5 +1,9 @@
 # Description
-This script serves as a simple notification system for sites availability found on BC Parks Camping website.
+This script serves as a simple notification system for sites availability.
+Works with campsite park reservation systems in:<br/>
+- Canada: British Columbia, Manitoba, Ontario, Nova Scotia, New Brunswick, Newfoundland and Labrador, Yukon, Parks Canada<br/>
+- USA: Michigan, Maryland, Mississippi, Nebraska<br
+
 Runs on a headless linux server.<br/>
 When the script is ran, it continually checks for all or select sites for availability and notifies you on screen or via SMS message<br/><br/>
 Example output:
@@ -27,12 +31,12 @@ This is a work in progress-hobby project. Errors, bugs are expected.
 ## Python
 > Create virtual envrionment
 ```
-python3 -m venv bcparks
+python3 -m venv parks
 ```
 
 > Activate this virtual environment
 ```
-. bcparks/bin/activate
+. parks/bin/activate
 ```
 
 > Install python dependencies
@@ -71,7 +75,7 @@ chmod +x /usr/local/bin/chromedriver
 ```
 # Usage
 1. Navigate to [https://camping.bcparks.ca/create-booking/](url)
-2. Select your Park, time frame and tent size, click Search
+2. Select your park, time frame and tent size, click Search
 3. A map of available campsites should now be visible (Note: if there are multiple camp sites within the park, select the desired camp site)
 4. Copy the URL (this is your `--u` argument)
 > URL `--u` example:
@@ -83,7 +87,7 @@ https://camping.bcparks.ca/create-booking/results?resourceLocationId=-2147483504
 <br/><br/>
 > Activate bcpark virtual environment
 ```
-. bcpark/bin/activate
+. park/bin/activate
 ```
 <br/>
 
