@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import argparse
 import re
 import time
@@ -157,33 +157,8 @@ if __name__ == '__main__':
     # Twilio API
     from twilio.rest import Client
 
-    description = ("This scripts monitors for available sites based on the provided URL from the camping.bcparks.ca website \n"
-                   "The script runs on a headless linux server\n"
-                   "Tested on Debian 12.5(Bookworm) with latest Chrome \n"
-                   "Example URL: \n"
-                   "https://camping.bcparks.ca/create-booking/results?mapId=-2147483376&searchTabGroupId=0&bookingCategoryId=0&startDate=2025-07-07&endDate=2025-07-14&nights=7&isReserving=true&equipmentId=-32768&subEquipmentId=-32768&filterData=%7B%7D"
-                   "---< Setup >--- \n"
-                   "1. Ensure you are running python3.11 (older version may work) \n"
-                   "2. Create virtual env: \n"
-                   "    python3 -m venv bcparks \n"
-                   "3. Activate this env: \n"
-                   "    . bcpark/bin/activate \n"
-                   "4. Install dependencies \n"
-                   "    pip install twilio selenium webdriver-manager\n"
-                   "5. Install Chrome \n"
-                   "    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo tee /usr/share/keyrings/google-chrome.asc\n"
-                   "    echo 'deb [signed-by=/usr/share/keyrings/google-chrome.asc] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list\n"
-                   "    sudo apt update\n"
-                   "    sudo apt install google-chrome-stable\n\n"
-                   "6. Install ChromeDriver \n"
-                   "    CHROME_VERSION=$(google-chrome --version | awk '{print $3}')\n"
-                   "    wget https://storage.googleapis.com/chrome-for-testing-public/${CHROME_VERSION}/linux64/chromedriver-linux64.zip\n"
-                   "    unzip chromedriver-linux64.zip\n"
-                   "    cd chromedriver-linux64\n"
-                   "    mv chromedriver /usr/local/bin/\n"
-                   "    chmod +x /usr/local/bin/chromedriver\n\n"
-                   "5. Twilio (Optional)\n"
-                   "    Create Twilio account and populate default twilio specific argparse args if sms is required \n\n"
+    description = ("This script monitors available campsites based on the provided URL \n"
+                   "For full README, check https://github.com/Mukrosz/parks \n"
                    " ---< Examples >--- \n"
                    "Check for site availability : \n"
                    "  ./query_site.py --u 'https://camping.bcparks.ca/create-booking...'  \n\n" 
