@@ -1,11 +1,13 @@
 # Description
-This script serves as a simple notification system for sites availability.
+Campsites availability monitor and notification system. It continually checks availability every 60 seconds and posts results on screen or via SMS message.
 Works with campsite park reservation systems in:<br/>
 - Canada: British Columbia, Manitoba, Ontario, Nova Scotia, New Brunswick, Newfoundland and Labrador, Yukon, Parks Canada<br/>
 - USA: Michigan, Maryland, Mississippi, Nebraska<br/>
 
-Runs on a headless linux server.<br/>
-When the script is ran, it continually checks for all or select sites for availability and notifies you on screen or via SMS message<br/><br/>
+There are 2 scripts. Both do the same thing and use the same arguments but function scrape availability in 2 distinct ways:
+> monitor_site.py - headless Chrome automation (selenium)<br/>
+> monitor_site_api.py - uses API
+
 Example output:
 ```
 2024-03-01 08:18:33 - No Availability
@@ -17,15 +19,19 @@ SMS sent: SMaxxxxx
 This is a work in progress-hobby project. Errors, bugs are expected. 
 
 # Requirements
-* linux OS (tested on Debian 12.5) 
-* python3.11 (older may work, not tested)
+* OS: linux. Tested on Debian 12.5
+* Python3: Tested with 3.10, 3.11. Older may work
+* pip packages
+  * pyshorteners
+  * twilio (optional sms service)
+### monitor_site.py - requirements
+* Chrome
+* ChromeDriver (Chrome matching version)
 * pip packages:
   * selenium
   * webdriver-manager
-  * pyshorteners
-  * twilio (optional sms service)
-* Chrome
-* ChromeDriver (Chrome matching version)
+
+
 
 # Installation
 ## Python
