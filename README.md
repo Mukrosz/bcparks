@@ -87,7 +87,7 @@ https://camping.bcparks.ca/create-booking/results?resourceLocationId=-2147483504
 <br/><br/>
 > Activate bcpark virtual environment
 ```
-. park/bin/activate
+. parks/bin/activate
 ```
 <br/>
 
