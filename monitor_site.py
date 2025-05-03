@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
+
 import argparse
 import re
+import sys
 import time
 from datetime import datetime
 
@@ -134,28 +136,22 @@ def setup_webdriver():
         return None
 
 if __name__ == '__main__':
-    # Selenium
-    from selenium import webdriver
-    from selenium.common.exceptions import (
-        StaleElementReferenceException,
-        TimeoutException,
-        NoSuchElementException,
-        WebDriverException
-    )
-    from selenium.webdriver.chrome.service import Service as ChromeService
-    from selenium.webdriver.chrome.options import Options
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.support.ui import WebDriverWait
-    from selenium.webdriver.support import expected_conditions as EC
-
-    # WebDriver Manager
-    from webdriver_manager.chrome import ChromeDriverManager
-
-    # PyShorter - TinyURL
-    import pyshorteners
-
-    # Twilio API
-    from twilio.rest import Client
+    try:
+        from selenium import webdriver
+        from selenium.common.exceptions import (
+            StaleElementReferenceException,
+            TimeoutException,
+            WebDriverException,
+            NoSuchElementException
+        )
+        from selenium.webdriver.chrome.service import Service as ChromeService
+        from selenium.webdriver.chrome.options import Options
+        from selenium.webdriver.common.by import By
+        from selenium.webdriver.support.ui import WebDriverWait
+        from selenium.webdriver.support import expected_conditions as EC
+        from webdriver_manager.chrome import ChromeDriverManager
+    except ImportError:
+        sys.exit('Error: selenium or webdriver_manager module not found. Install with `pip install selenium webdriver-manager`')
 
     description = ("This script monitors available campsites based on the provided URL \n"
                    "For full README, check https://github.com/Mukrosz/parks \n"
@@ -220,13 +216,20 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.sms:
-        # Initialize Twilio client
-        client = Client(args.twilio_sid, args.twilio_auth_token)
+        try:
+            from twilio.rest import Client
+            client = Client(args.twilio_sid, args.twilio_auth_token)
+        except ImportError:
+            sys.exit('Error: Twilio module not found. Install with `pip install twilio`')
+
+        try:
+            import pyshorteners
+        except ImportError:
+            sys.exit('Error: pyshorteners module not found. Please install it using `pip install pyshorteners`')
 
     driver = setup_webdriver()
     if not driver:
-        print("❌ WebDriver initialization failed. Exiting...")
-        exit(1)
+        sys.exit('❌ WebDriver initialization failed. Exiting...')
 
     try:
         while True:
