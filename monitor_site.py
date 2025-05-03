@@ -11,9 +11,24 @@ def shorten_url(url):
     s = pyshorteners.Shortener()
     return s.tinyurl.short(url)
 
+def current_time():
+    """Return current date in a desired format"""
+    return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+def pp(message, error = False):
+    """
+    Regular print but prefixed with current timestamp
+
+    :param str message : title of the message 
+    """
+    if error:
+        sys.exit('{} - {}'.format(current_time(), message))
+    else:
+        print('{} - {}'.format(current_time(), message))
+
 def comma_separated_list(value):
-    """Converts a comma-separated string into a sorted list of numbers"""
-    return sorted([item.strip() for item in value.split(',')], key = sort_key)
+    """Converts a comma-separated string into a list"""
+    return [item.strip().lower() for item in value.split(',')]
 
 def sort_key(s):
     """
@@ -45,74 +60,75 @@ def send_sms(message, client, to_number, from_number):
         body  = message
     )
 
-    print(f"SMS sent: {message.sid}")
+    pp('SMS sent: {}'.format(message.sid))
 
-def get_sites_availability(driver, url):
+def get_available_sites(driver, url, max_attempts = 5, retry_delay = 1):
     """
-    Retrieves available campsite listings, handling stale elements.
-
-    :param obj driver: Selenium WebDriver instance
-    :param str url: URL to check for campsite availability
-    :return: Sorted list of available site names
+    Returns a dictionary of {label: icon_element} for all available campsites,
+    with retries and smarter load timing to avoid stale references.
     """
-    try:
-        driver.get(url)
 
-        # Wait until the map-container is fully loaded
-        WebDriverWait(driver, 30).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".map-container"))
-        )
+    for attempt in range(max_attempts):
+        available = []
 
-        # Wait for all site icons to load
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.CLASS_NAME, "map-icon"))
-        )
+        try:
+            pp('⏳ Scanning for available sites (attempt {}/{})...'.format(attempt + 1, max_attempts))
+            driver.get(url)
 
-        max_retries = 3  # Number of retries for stale elements
-        retry_delay = 1  # Initial delay for backoff
+            WebDriverWait(driver, 30).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, '.map-container'))
+            )
 
-        for attempt in range(max_retries):
-            try:
-                # Re-fetch elements every retry
-                site_icons = driver.find_elements(By.CLASS_NAME, "map-icon")
-                available_sites = []
+            WebDriverWait(driver, 15).until(
+                lambda d: len(d.find_elements(By.CLASS_NAME, 'map-icon')) > 10
+            )
 
-                for icon in site_icons:
-                    try:
-                        if "icon-available" in icon.get_attribute("class"):
-                            # Locate the nearest label safely
-                            site_label_element = icon.find_element(By.XPATH, "./following-sibling::*[contains(@class, 'map-site-label')]")
-                            site_label_text_element = site_label_element.find_element(By.CLASS_NAME, "resource-label")
-                            site_label = site_label_text_element.text.strip()
+            # Optional: wait for icon count to stabilize
+            stable_count = 0
+            last_count = 0
+            for _ in range(5):
+                icons = driver.find_elements(By.CLASS_NAME, 'map-icon')
+                count = len(icons)
+                if count == last_count:
+                    stable_count += 1
+                    if stable_count >= 2:
+                        break
+                else:
+                    stable_count = 0
+                    last_count = count
+                time.sleep(0.5)
 
-                            if site_label and site_label not in available_sites:
-                                available_sites.append(site_label)
+            icons = driver.find_elements(By.CLASS_NAME, 'map-icon')
 
-                    except StaleElementReferenceException:
-                        print("🔄 Stale element detected, retrying...")
-                        time.sleep(retry_delay)
-                        retry_delay *= 2  # Exponential backoff
-                        break  # Break out and retry fetching elements
-                
-                return sorted(available_sites, key = sort_key)
+            for i, icon in enumerate(icons):
+                try:
+                    if 'icon-available' not in icon.get_attribute('class'):
+                        continue
 
-            except StaleElementReferenceException:
-                print(f"🔄 Retrying fetch attempt {attempt + 1}/{max_retries} due to stale elements...")
-                time.sleep(retry_delay)
-                retry_delay *= 2  # Increase wait time on subsequent retries
+                    label_el = icon.find_element(By.XPATH, './following-sibling::*[contains(@class, "map-site-label")]')
+                    label_text = label_el.find_element(By.CLASS_NAME, 'resource-label').text.strip().lower()
 
-        print("❌ Stale elements persisted after multiple attempts.")
-        return []
+                    if label_text:
+                        available.append(label_text)
 
-    except TimeoutException:
-        print("⚠ Timeout while loading page.")
-        return []
-    except WebDriverException as e:
-        print(f"❌ WebDriver error: {e}")
-        return []
-    except Exception as e:
-        print(f"❌ Unexpected error: {e}")
-        return []
+                except (StaleElementReferenceException, NoSuchElementException) as e:
+                    pp('⚠️  Skipped icon[{}] due to: {}'.format(i, type(e).__name__))
+                    continue
+
+            return available
+
+        except TimeoutException:
+            pp('❌ Timeout waiting for icons or map')
+        except WebDriverException as e:
+            pp('❌ WebDriver error: {}'.format(e))
+            break
+        except Exception as e:
+            pp('❌ Unexpected error: {}'.format(e))
+
+        time.sleep(retry_delay)
+
+    pp('❌ Failed to retrieve available sites after {} attempts'.format(max_attempts))
+    return {}
 
 def setup_webdriver():
     """
@@ -132,7 +148,7 @@ def setup_webdriver():
         driver.set_page_load_timeout(60)  # Prevent long waits on slow connections
         return driver
     except WebDriverException as e:
-        print(f"❌ WebDriver failed to start: {e}")
+        pp('❌ WebDriver failed to start: {}'.format(e))
         return None
 
 if __name__ == '__main__':
@@ -233,27 +249,25 @@ if __name__ == '__main__':
 
     try:
         while True:
-            available_sites = get_sites_availability(driver, args.url)
+            available_sites = get_available_sites(driver, args.url)
 
             if args.filter:
                 available_sites = [site for site in args.filter if site in available_sites]
 
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             if available_sites:
-                print(f"{timestamp} - Available sites: {', '.join(available_sites)}")
+                pp('✨ Found {} available sites: {}'.format(len(available_sites),','.join(sorted(available_sites, key=sort_key))))
                 if args.sms:
-                    send_sms(f"{timestamp} - Available sites: {', '.join(available_sites)}\n{shorten_url(args.url)}",
-                             client, args.my_phone_number, args.twilio_number)
+                    send_sms('{} - Available sites: {}\n{}'.format(current_time(),','.join(available_sites), shorten_url(args.url)),
+                              client,args.my_phone_number, args.twilio_number
+                    )
             else:
-                print(f"{timestamp} - No Availability")
+                pp('❌ No Availability')
 
             time.sleep(args.interval)
 
     except KeyboardInterrupt:
-        print("Stopping the script.")
-
+        pp('🛑 Script interrupted by user')
     except Exception as e:
-        print(f"❌ Unexpected error: {e}")
-
+        pp('❌ Unexpected error: {}'.format(e))
     finally:
         driver.quit()
