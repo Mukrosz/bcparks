@@ -4,7 +4,7 @@ Works with campsite park reservation systems in:<br/>
 - Canada: British Columbia, Manitoba, Ontario, Nova Scotia, New Brunswick, Newfoundland and Labrador, Yukon, Parks Canada<br/>
 - USA: Michigan, Maryland, Mississippi, Nebraska<br/>
 
-There are 2 scripts. Both do the same thing and use the same arguments but function scrape availability in 2 distinct ways:
+There are 2 scripts. Both do the same thing and use the same arguments but scrape availability information differently:
 > monitor_site.py - headless Chrome automation (selenium)<br/>
 > monitor_site_api.py - uses API
 
@@ -21,10 +21,9 @@ This is a work in progress-hobby project. Errors, bugs are expected.
 # Requirements
 * OS: linux. Tested on Debian 12.5
 * Python3: Tested with 3.10, 3.11. Older may work
-* pip packages
-  * pyshorteners
-  * twilio (optional sms service)
-### monitor_site.py - additional requirements
+* pip packages (optional)
+  * pyshorteners, twilio
+### Skip below if using monitor_site_api.py
 * Chrome
 * ChromeDriver (Chrome matching version)
 * pip packages:
@@ -34,42 +33,39 @@ This is a work in progress-hobby project. Errors, bugs are expected.
 
 
 # Installation
-## Python
-> Create virtual envrionment
+### Python
+1. Create virtual envrionment
 ```
 python3 -m venv parks
 ```
 
-> Activate this virtual environment
+2. Activate this virtual environment
 ```
 . parks/bin/activate
 ```
+3. Install pip dependencies if you plan to receive SMS notifications (requires Twilio active account)
+```
+pip install twilio pyshorteners
+```
 
-> Install python dependencies
+### Skip steps below if using monitor_site_api.py
+
+4. Install python dependencies
 ```
 pip install selenium webdriver-manager pyshorteners
 ```
 
-> Install Twilio module if you plan to receive SMS notifications (requires Twilio registration)
-```
-pip install twilio
-```
-
-## Google Chrome
-> Add Google Chrome repo (Debian based)
+5. Add Google Chrome repo (Debian based)
 ```
 wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo tee /usr/share/keyrings/google-chrome.asc
 echo 'deb [signed-by=/usr/share/keyrings/google-chrome.asc] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
 ```
-> Install Google Chrome
-> 
+6. Install Google Chrome
 ```
-sudo apt update
 sudo apt install google-chrome-stable
 ```
 
-## Google Chrome Driver
-> This should install a matching version of Google Chrome Driver (important)
+7. Install a matching version of Google Chrome Driver (important)
 ```
 CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
 cd /tmp/
@@ -80,7 +76,7 @@ mv chromedriver /usr/local/bin/
 chmod +x /usr/local/bin/chromedriver
 ```
 # Usage
-1. Navigate to [https://camping.bcparks.ca/create-booking/](url)
+1. Navigate to [https://camping.bcparks.ca/create-booking/](url) (or respective park's url)
 2. Select your park, time frame and tent size, click Search
 3. A map of available campsites should now be visible (Note: if there are multiple camp sites within the park, select the desired camp site)
 4. Copy the URL (this is your `--u` argument)
